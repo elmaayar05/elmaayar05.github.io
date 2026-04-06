@@ -321,6 +321,37 @@
     color: #475569;
   }
 
+  /* ============================== */
+  /* STICKY PALETTE BAR */
+  /* ============================== */
+  .sticky-palette-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    padding: 16px 40px 12px;
+    margin: 0 -40px;
+    transition: box-shadow 0.3s ease;
+  }
+  .sticky-palette-bar.scrolled {
+    box-shadow: 0 4px 24px rgba(15,23,42,0.08);
+  }
+  .sticky-palette-bar .section-label { margin-bottom: 4px; }
+  .sticky-palette-bar .section-title { font-size: 18px; margin-bottom: 2px; }
+  .sticky-palette-bar .section-desc { margin-bottom: 12px; font-size: 12px; }
+  .sticky-palette-bar .selector-grid-4 { gap: 10px; margin-bottom: 10px; }
+  .sticky-palette-bar .option-card { padding: 10px 12px; border-radius: 10px; }
+  .sticky-palette-bar .option-card .badge { margin-bottom: 6px; font-size: 8px; padding: 1px 5px; }
+  .sticky-palette-bar .option-card .swatches { margin-bottom: 6px; }
+  .sticky-palette-bar .option-card .swatch { height: 22px; border-radius: 4px; }
+  .sticky-palette-bar .option-card .name { font-size: 12px; }
+  .sticky-palette-bar .option-card .desc { display: none; }
+  .sticky-palette-bar .detail-bar { padding: 10px 16px; border-radius: 8px; }
+
+  @media (max-width: 900px) {
+    .sticky-palette-bar { padding: 12px 20px 10px; margin: 0 -20px; }
+  }
+
   .footer {
     text-align: center;
     padding: 40px 0 0;
@@ -346,9 +377,10 @@
   </div>
 
   <!-- ============================== -->
-  <!-- PALETTE SELECTOR -->
+  <!-- PALETTE SELECTOR (STICKY) -->
   <!-- ============================== -->
-  <div class="section">
+  <div class="sticky-palette-bar" id="stickyPaletteBar">
+  <div class="section" style="margin-bottom:0;">
     <div class="section-label">Choose Palette</div>
     <div class="section-title">Color Direction</div>
     <div class="section-desc">Click to apply. Every concept below updates instantly.</div>
@@ -396,6 +428,7 @@
       </div>
     </div>
     <div class="detail-bar" id="paletteDetail"></div>
+  </div>
   </div>
 
   <div class="divider"></div>
@@ -971,6 +1004,12 @@ function renderAll() {
 // Init
 setPalette(0);
 setFont(0);
+
+// Sticky shadow on scroll
+const stickyBar = document.getElementById('stickyPaletteBar');
+window.addEventListener('scroll', () => {
+  stickyBar.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
 </script>
 </body>
 </html>
