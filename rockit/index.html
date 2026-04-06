@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeRock IT — Interactive Palette & Typography Explorer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Bebas+Neue&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #ffffff;
+    color: #0F172A;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 72px 40px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .header-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #94A3B8;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .header p {
+    font-size: 15px;
+    color: #64748B;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .section { margin-bottom: 72px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #94A3B8;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    font-size: 14px;
+    color: #64748B;
+    margin-bottom: 32px;
+    max-width: 600px;
+    line-height: 1.7;
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(15,23,42,0.07);
+    margin: 72px 0;
+  }
+
+  /* ============================== */
+  /* SELECTOR SHARED STYLES */
+  /* ============================== */
+  .selector-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .selector-grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .option-card {
+    border: 2px solid rgba(15,23,42,0.08);
+    border-radius: 14px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #ffffff;
+  }
+  .option-card:hover {
+    border-color: rgba(15,23,42,0.15);
+    box-shadow: 0 4px 16px rgba(15,23,42,0.06);
+  }
+  .option-card.active {
+    border-color: #0F172A;
+    box-shadow: 0 4px 20px rgba(15,23,42,0.1);
+  }
+  .option-card .badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .badge-user { background: #F1F5F9; color: #475569; }
+  .badge-suggested { background: #FEF3C7; color: #92400E; }
+  .badge-tech { background: #E0E7FF; color: #3730A3; }
+
+  .option-card .swatches { display: flex; gap: 4px; margin-bottom: 10px; }
+  .option-card .swatch { flex: 1; height: 32px; border-radius: 6px; }
+  .option-card .name { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .option-card .desc { font-size: 11px; color: #64748B; line-height: 1.5; }
+
+  /* Typography option preview */
+  .type-preview {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .type-preview span {
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    color: #0F172A;
+    white-space: nowrap;
+  }
+
+  /* Detail bar */
+  .detail-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 20px;
+    background: #F8FAFC;
+    border-radius: 12px;
+    border: 1px solid rgba(15,23,42,0.06);
+    flex-wrap: wrap;
+  }
+  .detail-bar .color-chip { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #475569; }
+  .detail-bar .chip-dot { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.06); }
+  .detail-bar .chip-hex { font-family: 'Space Grotesk', monospace; font-size: 11px; color: #94A3B8; }
+  .detail-bar .chip-role { font-size: 11px; color: #64748B; }
+  .detail-bar .font-info { font-size: 12px; color: #475569; }
+  .detail-bar .font-info strong { color: #0F172A; }
+
+  /* ============================== */
+  /* LOGO CONCEPTS */
+  /* ============================== */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .concept-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid rgba(15,23,42,0.08);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+    transition: box-shadow 0.3s ease;
+  }
+  .concept-card:hover {
+    box-shadow: 0 8px 24px rgba(15,23,42,0.07);
+  }
+  .concept-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding: 32px 24px;
+    background: #F8FAFC;
+  }
+  .concept-info {
+    padding: 18px 20px;
+    border-top: 1px solid rgba(15,23,42,0.06);
+  }
+  .concept-info .type {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94A3B8;
+    margin-bottom: 2px;
+  }
+  .concept-info .name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .concept-info .rationale {
+    font-size: 12px;
+    color: #64748B;
+    line-height: 1.6;
+  }
+
+  /* Type-driven concepts — 2-col for bigger previews */
+  .type-concept-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .type-concept-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid rgba(15,23,42,0.08);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+    transition: box-shadow 0.3s ease;
+  }
+  .type-concept-card:hover {
+    box-shadow: 0 8px 24px rgba(15,23,42,0.07);
+  }
+  .type-concept-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    padding: 32px 24px;
+    background: #F8FAFC;
+  }
+  .type-concept-info {
+    padding: 18px 20px;
+    border-top: 1px solid rgba(15,23,42,0.06);
+  }
+  .type-concept-info .type {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94A3B8;
+    margin-bottom: 2px;
+  }
+  .type-concept-info .name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .type-concept-info .rationale {
+    font-size: 12px;
+    color: #64748B;
+    line-height: 1.6;
+  }
+
+  /* Sizes & dark */
+  .sizes-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .size-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(15,23,42,0.08);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+  }
+  .size-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    min-height: 120px;
+    padding: 24px;
+    background: #F8FAFC;
+  }
+  .size-label {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #94A3B8;
+    text-transform: uppercase;
+    border-top: 1px solid rgba(15,23,42,0.06);
+  }
+
+  .dark-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .dark-card {
+    background: #0F172A;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    padding: 32px;
+    position: relative;
+  }
+  .dark-card .dark-label {
+    position: absolute;
+    bottom: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #475569;
+  }
+
+  /* ============================== */
+  /* STICKY PALETTE BAR */
+  /* ============================== */
+  .sticky-palette-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    padding: 16px 40px 12px;
+    margin: 0 -40px;
+    transition: box-shadow 0.3s ease;
+  }
+  .sticky-palette-bar.scrolled {
+    box-shadow: 0 4px 24px rgba(15,23,42,0.08);
+  }
+  .sticky-palette-bar .section-label { margin-bottom: 4px; }
+  .sticky-palette-bar .section-title { font-size: 18px; margin-bottom: 2px; }
+  .sticky-palette-bar .section-desc { margin-bottom: 12px; font-size: 12px; }
+  .sticky-palette-bar .selector-grid-4 { gap: 10px; margin-bottom: 10px; }
+  .sticky-palette-bar .option-card { padding: 10px 12px; border-radius: 10px; }
+  .sticky-palette-bar .option-card .badge { margin-bottom: 6px; font-size: 8px; padding: 1px 5px; }
+  .sticky-palette-bar .option-card .swatches { margin-bottom: 6px; }
+  .sticky-palette-bar .option-card .swatch { height: 22px; border-radius: 4px; }
+  .sticky-palette-bar .option-card .name { font-size: 12px; }
+  .sticky-palette-bar .option-card .desc { display: none; }
+  .sticky-palette-bar .detail-bar { padding: 10px 16px; border-radius: 8px; }
+
+  @media (max-width: 900px) {
+    .sticky-palette-bar { padding: 12px 20px 10px; margin: 0 -20px; }
+  }
+
+  .footer {
+    text-align: center;
+    padding: 40px 0 0;
+    color: #94A3B8;
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .selector-grid-4, .selector-grid-5 { grid-template-columns: repeat(2, 1fr); }
+    .concept-grid, .sizes-row, .dark-row { grid-template-columns: 1fr; }
+    .type-concept-grid { grid-template-columns: 1fr; }
+    .container { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">Interactive Visual Identity Explorer</div>
+    <h1>SafeRock IT</h1>
+    <p>Switch palettes and typefaces to see every concept update in real time. Icon-driven and type-driven directions — all in one document.</p>
+  </div>
+
+  <!-- ============================== -->
+  <!-- PALETTE SELECTOR (STICKY) -->
+  <!-- ============================== -->
+  <div class="sticky-palette-bar" id="stickyPaletteBar">
+  <div class="section" style="margin-bottom:0;">
+    <div class="section-label">Choose Palette</div>
+    <div class="section-title">Color Direction</div>
+    <div class="section-desc">Click to apply. Every concept below updates instantly.</div>
+
+    <div class="selector-grid-4" id="paletteSelector">
+      <div class="option-card active" data-palette="0" onclick="setPalette(0)">
+        <span class="badge badge-user">Your Pick</span>
+        <div class="swatches">
+          <div class="swatch" style="background: #DC2626;"></div>
+          <div class="swatch" style="background: #FACC15;"></div>
+          <div class="swatch" style="background: #38BDF8;"></div>
+        </div>
+        <div class="name">Crimson · Gold · Sky</div>
+        <div class="desc">Bold and vibrant. Red anchors, yellow energizes, sky blue signals trust.</div>
+      </div>
+      <div class="option-card" data-palette="1" onclick="setPalette(1)">
+        <span class="badge badge-user">Your Pick — Refined</span>
+        <div class="swatches">
+          <div class="swatch" style="background: #BE123C;"></div>
+          <div class="swatch" style="background: #F59E0B;"></div>
+          <div class="swatch" style="background: #0EA5E9;"></div>
+        </div>
+        <div class="name">Ruby · Amber · Ocean</div>
+        <div class="desc">Same family, dialed deeper. More premium feel — less saturated, more grown-up.</div>
+      </div>
+      <div class="option-card" data-palette="2" onclick="setPalette(2)">
+        <span class="badge badge-suggested">Suggested</span>
+        <div class="swatches">
+          <div class="swatch" style="background: #7C3AED;"></div>
+          <div class="swatch" style="background: #06B6D4;"></div>
+          <div class="swatch" style="background: #F97316;"></div>
+        </div>
+        <div class="name">Violet · Cyan · Ember</div>
+        <div class="desc">Modern cybersecurity. Purple = innovation, cyan = active/secure, orange = energy.</div>
+      </div>
+      <div class="option-card" data-palette="3" onclick="setPalette(3)">
+        <span class="badge badge-suggested">Suggested</span>
+        <div class="swatches">
+          <div class="swatch" style="background: #059669;"></div>
+          <div class="swatch" style="background: #EAB308;"></div>
+          <div class="swatch" style="background: #1E40AF;"></div>
+        </div>
+        <div class="name">Emerald · Gold · Deep Blue</div>
+        <div class="desc">Trust-first. Green = safety, gold = premium, deep blue = depth.</div>
+      </div>
+    </div>
+    <div class="detail-bar" id="paletteDetail"></div>
+  </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================== -->
+  <!-- TYPOGRAPHY SELECTOR -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-label">Choose Typeface</div>
+    <div class="section-title">Typography</div>
+    <div class="section-desc">Click to apply across all logo concepts and type-driven marks below.</div>
+
+    <div class="selector-grid-5" id="fontSelector">
+      <div class="option-card active" data-font="0" onclick="setFont(0)">
+        <span class="badge badge-tech">Geometric</span>
+        <div class="type-preview"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;">SafeRock</span></div>
+        <div class="name">Space Grotesk</div>
+        <div class="desc">Technical, geometric. The original pick. Sharp and precise.</div>
+      </div>
+      <div class="option-card" data-font="1" onclick="setFont(1)">
+        <span class="badge badge-tech">Neutral</span>
+        <div class="type-preview"><span style="font-family:'Inter',sans-serif;font-weight:700;">SafeRock</span></div>
+        <div class="name">Inter</div>
+        <div class="desc">Clean, neutral, universally legible. The "safe" choice — but never boring.</div>
+      </div>
+      <div class="option-card" data-font="2" onclick="setFont(2)">
+        <span class="badge badge-suggested">Modern</span>
+        <div class="type-preview"><span style="font-family:'Sora',sans-serif;font-weight:700;">SafeRock</span></div>
+        <div class="name">Sora</div>
+        <div class="desc">Geometric with soft terminals. Modern startup energy — approachable tech.</div>
+      </div>
+      <div class="option-card" data-font="3" onclick="setFont(3)">
+        <span class="badge badge-suggested">Friendly</span>
+        <div class="type-preview"><span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">SafeRock</span></div>
+        <div class="name">Plus Jakarta Sans</div>
+        <div class="desc">Friendly and professional. Great for SaaS — warm but not casual.</div>
+      </div>
+      <div class="option-card" data-font="4" onclick="setFont(4)">
+        <span class="badge badge-tech">Bold</span>
+        <div class="type-preview"><span style="font-family:'Outfit',sans-serif;font-weight:700;">SafeRock</span></div>
+        <div class="name">Outfit</div>
+        <div class="desc">Strong geometric sans. Clean, authoritative — a bolder statement.</div>
+      </div>
+    </div>
+    <div class="detail-bar" id="fontDetail"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================== -->
+  <!-- ICON + WORDMARK CONCEPTS -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-label">Icon + Wordmark Concepts</div>
+    <div class="section-title">Three Directions</div>
+    <div class="section-desc">Each concept updates with both the selected palette and typeface.</div>
+
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-preview" id="previewA"></div>
+        <div class="concept-info">
+          <div class="type">A — Icon + Wordmark</div>
+          <div class="name">Launch Rock</div>
+          <div class="rationale">Faceted rock splits open as a rocket launches. The rock = foundation, the rocket = momentum.</div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-preview" id="previewB"></div>
+        <div class="concept-info">
+          <div class="type">B — Icon + Wordmark</div>
+          <div class="name">Shield Ascent</div>
+          <div class="rationale">Rocket carved as negative space inside a faceted gem. Discovered, not announced. Best at small sizes.</div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-preview" id="previewC"></div>
+        <div class="concept-info">
+          <div class="type">C — Icon + Wordmark</div>
+          <div class="name">RockLaunch</div>
+          <div class="rationale">Rock IS the rocket — one unified crystalline form. Most abstract, most ownable silhouette.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================== -->
+  <!-- TYPE-DRIVEN CONCEPTS -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-label">Type-Driven Concepts</div>
+    <div class="section-title">Typography as the Mark</div>
+    <div class="section-desc">No icon needed — the wordmark IS the logo. These rely on type weight, spacing, and color to carry the brand.</div>
+
+    <div class="type-concept-grid">
+      <div class="type-concept-card">
+        <div class="type-concept-preview" id="typeConceptD"></div>
+        <div class="type-concept-info">
+          <div class="type">D — Weight Contrast</div>
+          <div class="name">Bold/Light Split</div>
+          <div class="rationale">"Safe" in heavy weight, "Rock" in light. The weight shift itself creates the logo — strength meets precision.</div>
+        </div>
+      </div>
+      <div class="type-concept-card">
+        <div class="type-concept-preview" id="typeConceptE"></div>
+        <div class="type-concept-info">
+          <div class="type">E — Monogram + Line</div>
+          <div class="name">SR Monogram</div>
+          <div class="rationale">S and R locked together with a vertical bar. Compact, stamp-like. Works alone or paired with full name.</div>
+        </div>
+      </div>
+      <div class="type-concept-card">
+        <div class="type-concept-preview" id="typeConceptF"></div>
+        <div class="type-concept-info">
+          <div class="type">F — Bracket Lock</div>
+          <div class="name">Code Notation</div>
+          <div class="rationale">Square brackets frame the name — a nod to code, terminal commands, security syntax. Instantly "developer."</div>
+        </div>
+      </div>
+      <div class="type-concept-card">
+        <div class="type-concept-preview" id="typeConceptG"></div>
+        <div class="type-concept-info">
+          <div class="type">G — Color Block</div>
+          <div class="name">Accent Slice</div>
+          <div class="rationale">A colored block behind one letter creates a focal point. The accent color does the heavy lifting — simple, ownable, bold.</div>
+        </div>
+      </div>
+      <div class="type-concept-card" style="grid-column: 1 / -1;">
+        <div class="type-concept-preview" id="typeConceptH" style="min-height:180px;"></div>
+        <div class="type-concept-info">
+          <div class="type">H — Monogram + Rocket Divider</div>
+          <div class="name">SR Rocket</div>
+          <div class="rationale">The SR monogram where the vertical divider IS a rocket launching upward between the letters. Security (S) and Rock (R) held together by the core brand symbol. Compact, iconic, works at any size.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ICON SIZES -->
+  <div class="section">
+    <div class="section-label">Scale Test</div>
+    <div class="section-title">64 · 32 · 16 px</div>
+    <div class="section-desc">How each icon mark holds up from app icon down to favicon.</div>
+
+    <div class="sizes-row">
+      <div class="size-card">
+        <div class="size-preview" id="sizeA"></div>
+        <div class="size-label">A — Launch Rock</div>
+      </div>
+      <div class="size-card">
+        <div class="size-preview" id="sizeB"></div>
+        <div class="size-label">B — Shield Ascent</div>
+      </div>
+      <div class="size-card">
+        <div class="size-preview" id="sizeC"></div>
+        <div class="size-label">C — RockLaunch</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- DARK REVERSE -->
+  <div class="section">
+    <div class="section-label">Dark Reverse</div>
+    <div class="section-title">On Dark Backgrounds</div>
+    <div class="section-desc">For app splash screens, social media, swag — how each palette looks inverted.</div>
+
+    <div class="dark-row">
+      <div class="dark-card" id="darkA"><span class="dark-label">A — Launch Rock</span></div>
+      <div class="dark-card" id="darkB"><span class="dark-label">B — Shield Ascent</span></div>
+      <div class="dark-card" id="darkC"><span class="dark-label">C — RockLaunch</span></div>
+    </div>
+  </div>
+
+  <div class="footer">SafeRock IT — Interactive Visual Identity Explorer — April 2026</div>
+</div>
+
+<script>
+// ============================
+// PALETTE DATA
+// ============================
+const palettes = [
+  {
+    name: "Crimson · Gold · Sky",
+    primary: "#DC2626", primaryDark: "#991B1B", primaryBright: "#EF4444", primaryDeep: "#7F1D1D",
+    accent: "#FACC15", accentLight: "#FEF08A",
+    signal: "#38BDF8", signalLight: "#BAE6FD",
+    roles: [
+      { color: "#DC2626", hex: "#DC2626", role: "Primary — brand anchor" },
+      { color: "#FACC15", hex: "#FACC15", role: "Accent — energy, exhaust" },
+      { color: "#38BDF8", hex: "#38BDF8", role: "Signal — trust, window" },
+    ]
+  },
+  {
+    name: "Ruby · Amber · Ocean",
+    primary: "#BE123C", primaryDark: "#881337", primaryBright: "#E11D48", primaryDeep: "#4C0519",
+    accent: "#F59E0B", accentLight: "#FDE68A",
+    signal: "#0EA5E9", signalLight: "#BAE6FD",
+    roles: [
+      { color: "#BE123C", hex: "#BE123C", role: "Primary — deeper crimson" },
+      { color: "#F59E0B", hex: "#F59E0B", role: "Accent — warm amber" },
+      { color: "#0EA5E9", hex: "#0EA5E9", role: "Signal — ocean blue" },
+    ]
+  },
+  {
+    name: "Violet · Cyan · Ember",
+    primary: "#7C3AED", primaryDark: "#5B21B6", primaryBright: "#8B5CF6", primaryDeep: "#3B0764",
+    accent: "#06B6D4", accentLight: "#A5F3FC",
+    signal: "#F97316", signalLight: "#FED7AA",
+    roles: [
+      { color: "#7C3AED", hex: "#7C3AED", role: "Primary — innovation" },
+      { color: "#06B6D4", hex: "#06B6D4", role: "Accent — active/secure" },
+      { color: "#F97316", hex: "#F97316", role: "Signal — energy burst" },
+    ]
+  },
+  {
+    name: "Emerald · Gold · Deep Blue",
+    primary: "#059669", primaryDark: "#065F46", primaryBright: "#10B981", primaryDeep: "#022C22",
+    accent: "#EAB308", accentLight: "#FEF08A",
+    signal: "#1E40AF", signalLight: "#BFDBFE",
+    roles: [
+      { color: "#059669", hex: "#059669", role: "Primary — safety, trust" },
+      { color: "#EAB308", hex: "#EAB308", role: "Accent — premium, gold" },
+      { color: "#1E40AF", hex: "#1E40AF", role: "Signal — depth, authority" },
+    ]
+  }
+];
+
+// ============================
+// FONT DATA
+// ============================
+const fonts = [
+  { name: "Space Grotesk", family: "'Space Grotesk', sans-serif", category: "Geometric Sans", weights: "300–700", desc: "Technical, geometric, sharp letterforms with a monospaced feel. Great for security/dev brands." },
+  { name: "Inter", family: "'Inter', sans-serif", category: "Neutral Sans", weights: "300–900", desc: "Universally legible, designed for screens. Professional without being cold." },
+  { name: "Sora", family: "'Sora', sans-serif", category: "Geometric Sans", weights: "300–800", desc: "Modern geometric with soft terminals. Approachable tech — startup energy." },
+  { name: "Plus Jakarta Sans", family: "'Plus Jakarta Sans', sans-serif", category: "Humanist Sans", weights: "300–800", desc: "Friendly and professional. SaaS-native — warm enough for B2C, sharp enough for B2B." },
+  { name: "Outfit", family: "'Outfit', sans-serif", category: "Geometric Sans", weights: "300–800", desc: "Strong geometric sans with generous proportions. Clean, authoritative, bold." },
+];
+
+let currentPalette = 0;
+let currentFont = 0;
+
+function setPalette(index) {
+  currentPalette = index;
+  document.querySelectorAll('#paletteSelector .option-card').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
+  const p = palettes[index];
+  document.getElementById('paletteDetail').innerHTML = p.roles.map(r =>
+    `<div class="color-chip">
+      <div class="chip-dot" style="background: ${r.color};"></div>
+      <span class="chip-hex">${r.hex}</span>
+      <span class="chip-role">${r.role}</span>
+    </div>`
+  ).join('');
+  renderAll();
+}
+
+function setFont(index) {
+  currentFont = index;
+  document.querySelectorAll('#fontSelector .option-card').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
+  const f = fonts[index];
+  document.getElementById('fontDetail').innerHTML =
+    `<div class="font-info"><strong>${f.name}</strong> — ${f.category} — Weights: ${f.weights}</div>
+     <div class="font-info" style="color:#64748B;">${f.desc}</div>`;
+  renderAll();
+}
+
+// ============================
+// ICON + WORDMARK SVG GENERATORS
+// ============================
+function svgA(p, f, w, h, showWordmark) {
+  const vb = showWordmark ? "0 0 320 130" : "0 0 84 140";
+  if (showWordmark) {
+    return `<svg width="${w}" height="${h}" viewBox="${vb}" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(4, 6)">
+        <path d="M16 46 L34 24 L38 118 L4 118 Z" fill="${p.primary}" opacity="0.22"/>
+        <path d="M16 46 L34 24 L34 74 Z" fill="${p.primary}" opacity="0.16"/>
+        <path d="M60 46 L42 24 L38 118 L72 118 Z" fill="${p.primary}" opacity="0.22"/>
+        <path d="M60 46 L42 24 L42 74 Z" fill="${p.primaryBright}" opacity="0.14"/>
+        <path d="M38 0 L49 28 L49 80 L38 92 L27 80 L27 28 Z" fill="${p.primary}"/>
+        <path d="M38 0 L49 28 L27 28 Z" fill="${p.primaryBright}"/>
+        <circle cx="38" cy="42" r="6.5" fill="${p.primaryDark}"/>
+        <circle cx="38" cy="42" r="4" fill="${p.signal}"/>
+        <circle cx="36.5" cy="40.5" r="1" fill="${p.signalLight}" opacity="0.6"/>
+        <rect x="27" y="58" width="22" height="2.2" rx="1.1" fill="#ffffff" opacity="0.35"/>
+        <path d="M27 68 L16 87 L27 80 Z" fill="${p.primaryDark}"/>
+        <path d="M49 68 L60 87 L49 80 Z" fill="${p.primaryDark}"/>
+        <path d="M31 92 L38 120 L45 92 Z" fill="${p.accent}" opacity="0.9"/>
+        <path d="M33.5 92 L38 112 L42.5 92 Z" fill="${p.accentLight}" opacity="0.65"/>
+      </g>
+      <text font-family="${f.family}" font-size="34" fill="#0F172A" letter-spacing="-0.01em" y="50"><tspan x="88" font-weight="700">Safe</tspan><tspan font-weight="300" fill="#64748B">Rock</tspan></text>
+      <text x="88" y="76" font-family="${f.family}" font-weight="500" font-size="12" fill="${p.primary}" letter-spacing="0.14em">IT</text>
+      <rect x="108" y="69" width="28" height="2" rx="1" fill="${p.accent}" opacity="0.75"/>
+    </svg>`;
+  }
+  return `<svg width="${w}" height="${h}" viewBox="${vb}" fill="none">
+    <path d="M16 52 L36 28 L42 130 L4 130 Z" fill="${p.primary}" opacity="${w > 20 ? '0.2' : '0.3'}"/>
+    <path d="M68 52 L48 28 L42 130 L80 130 Z" fill="${p.primary}" opacity="${w > 20 ? '0.2' : '0.3'}"/>
+    <path d="M42 0 L54 32 L54 90 L42 102 L30 90 L30 32 Z" fill="${p.primary}"/>
+    ${w > 20 ? `<path d="M42 0 L54 32 L30 32 Z" fill="${p.primaryBright}"/>` : ''}
+    <circle cx="42" cy="48" r="${w <= 20 ? 9 : 7}" fill="${w > 20 ? p.primaryDark : p.signal}"/>
+    ${w > 20 ? `<circle cx="42" cy="48" r="4.5" fill="${p.signal}"/>` : ''}
+    ${w > 32 ? `<path d="M30 76 L18 98 L30 90 Z" fill="${p.primaryDark}"/>
+    <path d="M54 76 L66 98 L54 90 Z" fill="${p.primaryDark}"/>` : ''}
+    <path d="M34 102 L42 ${w <= 20 ? 130 : 134} L50 102 Z" fill="${p.accent}" opacity="0.9"/>
+    ${w > 20 ? `<path d="M37 102 L42 126 L47 102 Z" fill="${p.accentLight}" opacity="0.65"/>` : ''}
+  </svg>`;
+}
+
+function svgB(p, f, w, h, showWordmark) {
+  const vb = showWordmark ? "0 0 320 130" : "0 0 84 130";
+  if (showWordmark) {
+    return `<svg width="${w}" height="${h}" viewBox="${vb}" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(0, 2)">
+        <path d="M38 2 L70 30 L61 120 L15 120 L6 30 Z" fill="${p.primary}"/>
+        <path d="M38 2 L70 30 L38 42 Z" fill="${p.primaryBright}" opacity="0.72"/>
+        <path d="M38 2 L6 30 L38 42 Z" fill="${p.primaryDark}" opacity="0.85"/>
+        <path d="M38 42 L70 30 L61 120 Z" fill="${p.primary}" opacity="0.58"/>
+        <path d="M38 42 L6 30 L15 120 Z" fill="${p.primaryDark}" opacity="0.72"/>
+        <path d="M38 42 L61 120 L15 120 Z" fill="${p.primaryDeep}" opacity="0.78"/>
+        <path d="M38 14 L47 36 L47 78 L43.5 85 L38 90 L32.5 85 L29 78 L29 36 Z" fill="#ffffff"/>
+        <circle cx="38" cy="50" r="5.5" fill="${p.signal}"/>
+        <circle cx="36.5" cy="48.5" r="1.3" fill="#ffffff" opacity="0.5"/>
+        <path d="M29 66 L20 82 L29 76 Z" fill="#ffffff"/>
+        <path d="M47 66 L56 82 L47 76 Z" fill="#ffffff"/>
+        <path d="M33.5 90 L38 108 L42.5 90 Z" fill="${p.accent}" opacity="0.8"/>
+        <path d="M35.5 90 L38 102 L40.5 90 Z" fill="${p.accentLight}" opacity="0.6"/>
+      </g>
+      <text font-family="${f.family}" font-size="34" fill="#0F172A" letter-spacing="-0.01em" y="50"><tspan x="88" font-weight="700">Safe</tspan><tspan font-weight="300" fill="#64748B">Rock</tspan></text>
+      <text x="88" y="76" font-family="${f.family}" font-weight="500" font-size="12" fill="${p.primary}" letter-spacing="0.14em">IT</text>
+      <rect x="108" y="69" width="28" height="2" rx="1" fill="${p.accent}" opacity="0.75"/>
+    </svg>`;
+  }
+  return `<svg width="${w}" height="${h}" viewBox="${vb}" fill="none">
+    <path d="M42 2 L78 34 L68 130 L16 130 L6 34 Z" fill="${p.primary}"/>
+    ${w > 20 ? `<path d="M42 2 L78 34 L42 48 Z" fill="${p.primaryBright}" opacity="0.7"/>
+    <path d="M42 2 L6 34 L42 48 Z" fill="${p.primaryDark}" opacity="0.85"/>
+    <path d="M42 48 L78 34 L68 130 Z" fill="${p.primary}" opacity="0.6"/>
+    <path d="M42 48 L6 34 L16 130 Z" fill="${p.primaryDark}" opacity="0.75"/>
+    <path d="M42 48 L68 130 L16 130 Z" fill="${p.primaryDeep}" opacity="0.8"/>` : ''}
+    <path d="M42 16 L52 40 L52 86 L48 94 L42 100 L36 94 L32 86 L32 40 Z" fill="#ffffff"/>
+    <circle cx="42" cy="56" r="${w <= 20 ? 8 : 6}" fill="${p.signal}"/>
+    ${w > 20 ? `<path d="M32 72 L22 90 L32 84 Z" fill="#ffffff"/>
+    <path d="M52 72 L62 90 L52 84 Z" fill="#ffffff"/>` : ''}
+    <path d="M37 100 L42 ${w <= 20 ? 116 : 118} L47 100 Z" fill="${p.accent}" opacity="0.8"/>
+  </svg>`;
+}
+
+function svgC(p, f, w, h, showWordmark) {
+  const vb = showWordmark ? "0 0 320 140" : "0 0 84 155";
+  if (showWordmark) {
+    return `<svg width="${w}" height="${h}" viewBox="${vb}" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(4, 0)">
+        <path d="M38 0 L52 38 L57 86 L48 115 L28 115 L19 86 L24 38 Z" fill="${p.primary}"/>
+        <path d="M38 0 L24 38 L19 86 L28 115 L38 58 Z" fill="${p.primaryDark}" opacity="0.88"/>
+        <path d="M38 0 L52 38 L57 86 L48 115 L38 58 Z" fill="${p.primaryBright}" opacity="0.72"/>
+        <circle cx="38" cy="52" r="7" fill="${p.primaryDeep}" opacity="0.8"/>
+        <circle cx="38" cy="52" r="5" fill="${p.signal}"/>
+        <circle cx="36" cy="50" r="1.5" fill="${p.signalLight}" opacity="0.55"/>
+        <path d="M28 115 L17 128 L24 113 Z" fill="${p.primaryDark}" opacity="0.72"/>
+        <path d="M48 115 L59 128 L52 113 Z" fill="${p.primaryDark}" opacity="0.72"/>
+        <path d="M31 115 L38 138 L45 115 Z" fill="${p.accent}" opacity="0.85"/>
+        <path d="M33.5 115 L38 132 L42.5 115 Z" fill="${p.accentLight}" opacity="0.6"/>
+        <path d="M38 18 L50 36 L50 70 L38 84 L26 70 L26 36 Z" fill="none" stroke="${p.accent}" stroke-width="0.7" opacity="0.28"/>
+      </g>
+      <text font-family="${f.family}" font-size="34" fill="#0F172A" letter-spacing="-0.01em" y="50"><tspan x="80" font-weight="700">Safe</tspan><tspan font-weight="300" fill="#64748B">Rock</tspan></text>
+      <text x="80" y="76" font-family="${f.family}" font-weight="500" font-size="12" fill="${p.primary}" letter-spacing="0.14em">IT</text>
+      <rect x="100" y="69" width="28" height="2" rx="1" fill="${p.accent}" opacity="0.75"/>
+    </svg>`;
+  }
+  return `<svg width="${w}" height="${h}" viewBox="${vb}" fill="none">
+    <path d="M42 0 L58 42 L64 96 L54 128 L30 128 L20 96 L26 42 Z" fill="${p.primary}"/>
+    ${w > 20 ? `<path d="M42 0 L26 42 L20 96 L30 128 L42 64 Z" fill="${p.primaryDark}" opacity="0.9"/>
+    <path d="M42 0 L58 42 L64 96 L54 128 L42 64 Z" fill="${p.primaryBright}" opacity="0.75"/>` : ''}
+    <circle cx="42" cy="58" r="${w <= 20 ? 9 : 8}" fill="${w > 20 ? p.primaryDeep : p.signal}" opacity="${w > 20 ? '0.8' : '1'}"/>
+    ${w > 20 ? `<circle cx="42" cy="58" r="5.5" fill="${p.signal}"/>` : ''}
+    ${w > 32 ? `<path d="M30 128 L18 142 L26 126 Z" fill="${p.primaryDark}" opacity="0.75"/>
+    <path d="M54 128 L66 142 L58 126 Z" fill="${p.primaryDark}" opacity="0.75"/>` : ''}
+    <path d="M34 128 L42 ${w <= 20 ? 150 : 152} L50 128 Z" fill="${p.accent}" opacity="0.85"/>
+    ${w > 20 ? `<path d="M37 128 L42 146 L47 128 Z" fill="${p.accentLight}" opacity="0.6"/>` : ''}
+  </svg>`;
+}
+
+// ============================
+// TYPE-DRIVEN CONCEPT GENERATORS
+// ============================
+
+// D: Weight Contrast — Bold "Safe" + Light "Rock"
+function typeD(p, f) {
+  return `<div style="display:inline-flex;flex-direction:column;gap:4px;user-select:none;">
+    <div style="font-family:${f.family};font-size:52px;letter-spacing:-0.02em;line-height:1;">
+      <span style="font-weight:800;color:${p.primary};">Safe</span><span style="font-weight:300;color:#94A3B8;">Rock</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-family:${f.family};font-weight:500;font-size:11px;color:${p.primary};letter-spacing:0.16em;">IT SECURITY</span>
+      <span style="display:inline-block;width:24px;height:1.5px;background:${p.accent};opacity:0.7;"></span>
+    </div>
+  </div>`;
+}
+
+// E: SR Monogram with vertical bar
+function typeE(p, f) {
+  return `<div style="display:inline-flex;align-items:center;gap:24px;user-select:none;">
+    <div style="display:flex;align-items:center;line-height:1;">
+      <span style="font-family:${f.family};font-weight:800;font-size:48px;letter-spacing:-0.03em;color:${p.primary};">S</span>
+      <span style="display:inline-block;width:3px;height:44px;background:${p.accent};margin:0 4px;"></span>
+      <span style="font-family:${f.family};font-weight:800;font-size:48px;letter-spacing:-0.03em;color:${p.primaryDark};">R</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div style="font-family:${f.family};font-size:28px;letter-spacing:-0.01em;line-height:1;">
+        <span style="font-weight:700;color:#0F172A;">Safe</span><span style="font-weight:300;color:#64748B;">Rock</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-family:${f.family};font-weight:500;font-size:10px;color:${p.primary};letter-spacing:0.14em;">IT</span>
+        <span style="display:inline-block;width:20px;height:1.5px;background:${p.accent};opacity:0.7;"></span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// F: Bracket Lock — [SafeRock] (HTML/CSS for font-safe bracket alignment)
+function typeF(p, f) {
+  return `<div style="display:inline-flex;flex-direction:column;gap:6px;user-select:none;">
+    <div style="display:flex;align-items:center;line-height:1;">
+      <span style="font-family:'JetBrains Mono',monospace;font-weight:300;font-size:52px;color:${p.accent};">[</span>
+      <span style="font-family:${f.family};font-size:42px;font-weight:700;letter-spacing:-0.01em;">
+        <span style="color:#0F172A;">Safe</span><span style="color:${p.primary};">Rock</span>
+      </span>
+      <span style="font-family:'JetBrains Mono',monospace;font-weight:300;font-size:52px;color:${p.accent};">]</span>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-weight:400;font-size:10px;color:${p.primary};letter-spacing:0.12em;padding-left:4px;">// IT SECURITY</div>
+  </div>`;
+}
+
+// G: Color Block — accent rectangle behind one letter (HTML/CSS for font-safe alignment)
+function typeG(p, f) {
+  return `<div style="display:inline-flex;flex-direction:column;gap:6px;user-select:none;">
+    <div style="font-family:${f.family};font-size:48px;font-weight:700;letter-spacing:-0.02em;line-height:1;display:flex;align-items:center;">
+      <span style="color:#0F172A;">Safe</span><span style="background:${p.primary};color:#ffffff;padding:2px 4px;border-radius:4px;margin:0 -1px;">R</span><span style="color:#0F172A;">ock</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-family:${f.family};font-weight:500;font-size:11px;color:${p.primary};letter-spacing:0.14em;">IT</span>
+      <span style="display:inline-block;width:24px;height:1.5px;background:${p.accent};opacity:0.7;"></span>
+    </div>
+  </div>`;
+}
+
+// H: SR Monogram with rocket as the divider between S and R
+function typeH(p, f) {
+  // Rocket SVG that replaces the vertical bar — a tiny rocket launching upward
+  const rocketSvg = `<svg width="18" height="56" viewBox="0 0 18 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 2px;">
+    <!-- Rocket body -->
+    <path d="M9 0 L14 16 L14 36 L9 42 L4 36 L4 16 Z" fill="${p.accent}"/>
+    <!-- Nose cone highlight -->
+    <path d="M9 0 L14 16 L4 16 Z" fill="${p.accentLight}" opacity="0.7"/>
+    <!-- Window -->
+    <circle cx="9" cy="22" r="3" fill="${p.primaryDark}"/>
+    <circle cx="9" cy="22" r="2" fill="${p.signal}"/>
+    <circle cx="8.2" cy="21.2" r="0.5" fill="#ffffff" opacity="0.5"/>
+    <!-- Body stripe -->
+    <rect x="5" y="28" width="8" height="1.2" fill="#ffffff" opacity="0.25"/>
+    <!-- Fins -->
+    <path d="M4 32 L0 38 L4 36 Z" fill="${p.primaryDark}" opacity="0.75"/>
+    <path d="M14 32 L18 38 L14 36 Z" fill="${p.primaryDark}" opacity="0.75"/>
+    <!-- Exhaust -->
+    <path d="M6 42 L9 54 L12 42 Z" fill="${p.primary}" opacity="0.8"/>
+    <path d="M7 42 L9 50 L11 42 Z" fill="${p.primaryBright || p.primary}" opacity="0.5"/>
+  </svg>`;
+
+  return `<div style="display:inline-flex;align-items:center;gap:28px;user-select:none;">
+    <div style="display:flex;align-items:center;line-height:1;">
+      <span style="font-family:${f.family};font-weight:800;font-size:56px;letter-spacing:-0.03em;color:${p.primary};">S</span>
+      ${rocketSvg}
+      <span style="font-family:${f.family};font-weight:800;font-size:56px;letter-spacing:-0.03em;color:${p.primaryDark};">R</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div style="font-family:${f.family};font-size:30px;letter-spacing:-0.01em;line-height:1;">
+        <span style="font-weight:700;color:#0F172A;">Safe</span><span style="font-weight:300;color:#64748B;">Rock</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-family:${f.family};font-weight:500;font-size:10px;color:${p.primary};letter-spacing:0.14em;">IT</span>
+        <span style="display:inline-block;width:20px;height:1.5px;background:${p.accent};opacity:0.7;"></span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Dark variants for icon concepts
+function svgADark(p) {
+  return `<svg width="100" height="80" viewBox="0 0 84 140" fill="none">
+    <path d="M16 52 L36 28 L42 130 L4 130 Z" fill="${p.primary}" opacity="0.35"/>
+    <path d="M68 52 L48 28 L42 130 L80 130 Z" fill="${p.primary}" opacity="0.35"/>
+    <path d="M42 0 L54 32 L54 90 L42 102 L30 90 L30 32 Z" fill="#F1F5F9"/>
+    <path d="M42 0 L54 32 L30 32 Z" fill="#E2E8F0"/>
+    <circle cx="42" cy="48" r="7" fill="#0F172A"/>
+    <circle cx="42" cy="48" r="4.5" fill="${p.signal}"/>
+    <rect x="30" y="64" width="24" height="2.5" rx="1.25" fill="${p.primary}" opacity="0.6"/>
+    <path d="M30 76 L18 98 L30 90 Z" fill="${p.primary}"/>
+    <path d="M54 76 L66 98 L54 90 Z" fill="${p.primary}"/>
+    <path d="M34 102 L42 134 L50 102 Z" fill="${p.accent}" opacity="0.9"/>
+    <path d="M37 102 L42 126 L47 102 Z" fill="${p.accentLight}" opacity="0.6"/>
+  </svg>`;
+}
+function svgBDark(p) {
+  return `<svg width="100" height="80" viewBox="0 0 84 130" fill="none">
+    <path d="M42 2 L78 34 L68 130 L16 130 L6 34 Z" fill="${p.primary}"/>
+    <path d="M42 2 L78 34 L42 48 Z" fill="${p.primaryBright}" opacity="0.7"/>
+    <path d="M42 2 L6 34 L42 48 Z" fill="${p.primaryDark}" opacity="0.85"/>
+    <path d="M42 48 L78 34 L68 130 Z" fill="${p.primary}" opacity="0.6"/>
+    <path d="M42 48 L6 34 L16 130 Z" fill="${p.primaryDark}" opacity="0.75"/>
+    <path d="M42 48 L68 130 L16 130 Z" fill="${p.primaryDeep}" opacity="0.8"/>
+    <path d="M42 16 L52 40 L52 86 L48 94 L42 100 L36 94 L32 86 L32 40 Z" fill="#0F172A"/>
+    <circle cx="42" cy="56" r="6" fill="${p.signal}"/>
+    <path d="M32 72 L22 90 L32 84 Z" fill="#0F172A"/>
+    <path d="M52 72 L62 90 L52 84 Z" fill="#0F172A"/>
+    <path d="M37 100 L42 118 L47 100 Z" fill="${p.accent}" opacity="0.8"/>
+  </svg>`;
+}
+function svgCDark(p) {
+  return `<svg width="100" height="80" viewBox="0 0 84 155" fill="none">
+    <path d="M42 0 L58 42 L64 96 L54 128 L30 128 L20 96 L26 42 Z" fill="${p.primary}"/>
+    <path d="M42 0 L26 42 L20 96 L30 128 L42 64 Z" fill="${p.primaryDark}" opacity="0.9"/>
+    <path d="M42 0 L58 42 L64 96 L54 128 L42 64 Z" fill="${p.primaryBright}" opacity="0.75"/>
+    <circle cx="42" cy="58" r="8" fill="${p.primaryDeep}" opacity="0.8"/>
+    <circle cx="42" cy="58" r="5.5" fill="${p.signal}"/>
+    <path d="M30 128 L18 142 L26 126 Z" fill="${p.primaryDark}" opacity="0.75"/>
+    <path d="M54 128 L66 142 L58 126 Z" fill="${p.primaryDark}" opacity="0.75"/>
+    <path d="M34 128 L42 152 L50 128 Z" fill="${p.accent}" opacity="0.85"/>
+    <path d="M37 128 L42 146 L47 128 Z" fill="${p.accentLight}" opacity="0.65"/>
+  </svg>`;
+}
+
+// ============================
+// RENDER
+// ============================
+function renderAll() {
+  const p = palettes[currentPalette];
+  const f = fonts[currentFont];
+
+  // Icon + Wordmark previews
+  document.getElementById('previewA').innerHTML = svgA(p, f, 300, 120, true);
+  document.getElementById('previewB').innerHTML = svgB(p, f, 300, 120, true);
+  document.getElementById('previewC').innerHTML = svgC(p, f, 300, 130, true);
+
+  // Type-driven concepts
+  document.getElementById('typeConceptD').innerHTML = typeD(p, f);
+  document.getElementById('typeConceptE').innerHTML = typeE(p, f);
+  document.getElementById('typeConceptF').innerHTML = typeF(p, f);
+  document.getElementById('typeConceptG').innerHTML = typeG(p, f);
+  document.getElementById('typeConceptH').innerHTML = typeH(p, f);
+
+  // Size tests
+  document.getElementById('sizeA').innerHTML =
+    svgA(p, f, 56, 56, false) + svgA(p, f, 32, 32, false) + svgA(p, f, 16, 16, false);
+  document.getElementById('sizeB').innerHTML =
+    svgB(p, f, 56, 56, false) + svgB(p, f, 32, 32, false) + svgB(p, f, 16, 16, false);
+  document.getElementById('sizeC').innerHTML =
+    svgC(p, f, 56, 56, false) + svgC(p, f, 32, 32, false) + svgC(p, f, 16, 16, false);
+
+  // Dark
+  document.getElementById('darkA').innerHTML = svgADark(p) + '<span class="dark-label">A — Launch Rock</span>';
+  document.getElementById('darkB').innerHTML = svgBDark(p) + '<span class="dark-label">B — Shield Ascent</span>';
+  document.getElementById('darkC').innerHTML = svgCDark(p) + '<span class="dark-label">C — RockLaunch</span>';
+}
+
+// Init
+setPalette(0);
+setFont(0);
+
+// Sticky shadow on scroll
+const stickyBar = document.getElementById('stickyPaletteBar');
+window.addEventListener('scroll', () => {
+  stickyBar.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+</script>
+</body>
+</html>
